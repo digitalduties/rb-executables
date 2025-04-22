@@ -58,6 +58,16 @@ class DeoxyriboseNucleicAcid < NucleicAcid
     end
     nucleotide_count
   end
+
+  def find_motif(motif)
+    motif_positions = []
+    ending_position = motif.size - 1
+    @sequence.chars.each_with_index do |char, index|
+        motif_positions << index + 1 if @sequence[index..ending_position] == motif
+        ending_position += 1
+    end
+    motif_positions
+  end
 end
 
 class RiboseNucleicAcid < NucleicAcid
@@ -92,15 +102,18 @@ class RiboseNucleicAcid < NucleicAcid
 end
 
 dna = DeoxyriboseNucleicAcid.new("AGCTATAG")
-puts dna.transcribe
-puts dna.gc_content
-puts DeoxyriboseNucleicAcid.hamming_distance("GAGCCTAAAA", "CATCGT")
+puts dna.transcribe # AGCUAUAG
+puts dna.gc_content # 37.5
+puts DeoxyriboseNucleicAcid.hamming_distance("GAGCCTAAAA", "CATCGT") # 3
 
 dna = DeoxyriboseNucleicAcid.new("AAAACCCGGT")
-puts dna.reverse_complement
+puts dna.reverse_complement # ACCGGGTTTT
 
 rna = RiboseNucleicAcid.new("UUGUAAAUGUUUUAGUUUUUC")
-puts rna.translate
+p rna.translate # Leucine-STOP-Methionine-Phenylalanine-STOP-Phenylalanine-Phenylalanine
 
 dna = DeoxyriboseNucleicAcid.new("AGCTTTTCATTCTGACTGCA")
-puts dna.count_nucleotides
+p dna.count_nucleotides #{"A"=>4, "G"=>3, "C"=>5, "T"=>8}
+
+dna = DeoxyriboseNucleicAcid.new("GATATATGCATATACTT")
+p dna.find_motif("ATAT") # 
